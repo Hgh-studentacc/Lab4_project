@@ -86,3 +86,4 @@ linreg <-setRefClass( Class = "linreg",
 
 )
 linreg_mod <- linreg$new(Petal.Length~Species, data = iris)
+linreg_mod$print()
