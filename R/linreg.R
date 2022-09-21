@@ -82,18 +82,30 @@ linreg <-setRefClass( Class = "linreg",
                         },
                         print = function(){
                           cat(paste("linreg(formula = ", format(frmla), ", data = ", dta , ")\n\n ", sep = ""))
+                          cat(paste("Coefficients:\n\n"))
                           setNames(round(Regressions_coefficients[1:nrow(Regressions_coefficients)],3),rownames(Regressions_coefficients))
                         },
-                        ploting=function(){
-                          library(ggplot2)
-                          library(gridExtra)
+                        resid = function(){
+                          return(as.vector(The_residuals))
+                        },
+                        pred = function(){
+                          return(The_fitted_values)
+                        },
+                        coef = function(){
+                          a <- as.vector(Regressions_coefficients)
+                          names(a) <- colnames(X)
+                          return(a)
+                        },
 
-                          p1<<-ggplot()+
+                        ploting=function(){
+
+
+                          p1<-ggplot()+
                             #geom_line(data=data,aes(x=all.vars(formula)[2],y=all.vars(formula)[1]),color="red")+
                             geom_point(data=data,aes(x=The_fitted_values,y=The_residuals),shape=1)+
                             ylab("Residuals")+xlab("Fitted values")
 
-                          p2<<-ggplot()+
+                          p2<-ggplot()+
                             #geom_line(data=data,aes(x=,y=),color="red")+
                             geom_point(data=data,aes(x=The_fitted_values,y=The_residual_variance),shape=1)+
                             ylab("sqrt(|Standardized residual|)")+xlab("Fitted values")
@@ -107,6 +119,7 @@ linreg <-setRefClass( Class = "linreg",
 
 )
 
-linreg_mod <- linreg$new(Petal.Length~Species, data = iris)
-linreg_mod$print()
-linreg_mod$ploting()
+ # linreg_mod <- linreg$new(Petal.Length~Species, data = iris)
+ # linreg_mod$print()
+# linreg_mod$ploting()
+
