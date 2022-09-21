@@ -16,8 +16,8 @@
 #'
 #' @examples
 
-library(ggplot2)
-library(gridExtra)
+
+
 linreg <-setRefClass( Class = "linreg",
                       fields= list(formula= "formula",
                                    data= "data.frame",
@@ -84,7 +84,7 @@ linreg <-setRefClass( Class = "linreg",
                           cat(paste("linreg(formula = ", format(frmla), ", data = ", dta , ")\n\n ", sep = ""))
                           setNames(round(Regressions_coefficients[1:nrow(Regressions_coefficients)],3),rownames(Regressions_coefficients))
                         },
-                        ploting=function(){
+                        plot=function(){
                           library(ggplot2)
                           library(gridExtra)
 
@@ -114,4 +114,4 @@ linreg <-setRefClass( Class = "linreg",
 
 linreg_mod <- linreg$new(Petal.Length~Species, data = iris)
 linreg_mod$print()
-linreg_mod$ploting()
+linreg_mod$plot()
