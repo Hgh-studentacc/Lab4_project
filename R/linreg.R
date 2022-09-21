@@ -16,8 +16,8 @@
 #'
 #' @examples
 
-library(ggplot2)
-library(gridExtra)
+
+
 linreg <-setRefClass( Class = "linreg",
                       fields= list(formula= "formula",
                                    data= "data.frame",
@@ -85,6 +85,7 @@ linreg <-setRefClass( Class = "linreg",
                           cat(paste("Coefficients:\n\n"))
                           setNames(round(Regressions_coefficients[1:nrow(Regressions_coefficients)],3),rownames(Regressions_coefficients))
                         },
+
                         resid = function(){
                           return(as.vector(The_residuals))
                         },
@@ -97,18 +98,27 @@ linreg <-setRefClass( Class = "linreg",
                           return(a)
                         },
 
-                        ploting=function(){
+                        plot=function(){
+                          library(ggplot2)
+                          library(gridExtra)
+
+
 
 
                           p1<-ggplot()+
                             #geom_line(data=data,aes(x=all.vars(formula)[2],y=all.vars(formula)[1]),color="red")+
                             geom_point(data=data,aes(x=The_fitted_values,y=The_residuals),shape=1)+
-                            ylab("Residuals")+xlab("Fitted values")
+                            ylab("Residuals")+xlab("Fitted values")+
+                            labs(title = paste("Residuals vs Fitted values"))+
+                            theme(plot.title = element_text(hjust = 0.5))
 
                           p2<-ggplot()+
                             #geom_line(data=data,aes(x=,y=),color="red")+
-                            geom_point(data=data,aes(x=The_fitted_values,y=The_residual_variance),shape=1)+
-                            ylab("sqrt(|Standardized residual|)")+xlab("Fitted values")
+                            geom_point(data=data,aes(x=The_fitted_values,y=sqrt(abs(scale(The_residuals)))),shape=1)+
+                            ylab(expression(sqrt(abs("Standardized residual"))))+xlab("Fitted values")+
+                            labs(title = paste("Scale-Location"))+
+                            theme(plot.title = element_text(hjust = 0.5))
+
 
 
                           return(grid.arrange(p1, p2, ncol = 1))
