@@ -1,9 +1,13 @@
-#' Title
+
+#' A linear regression package
 #'
 #' @field formula formula.
 #' @field data data.frame.
+#' @field dta character.
+#' @field frmla formula.
 #' @field X matrix.
-#' @field Regressions_coefficients vector.
+#' @field y matrix.
+#' @field Regressions_coefficients matrix.
 #' @field The_fitted_values matrix.
 #' @field The_residuals matrix.
 #' @field The_degrees_of_freedom numeric.
@@ -11,12 +15,11 @@
 #' @field The_variance_of_the_regression_coefficients matrix.
 #' @field The_t_values matrix.
 #'
-#' @return
-#' @export
+#' @import methods
 #'
-#' @examples
-
-
+#' @export linreg
+#' @exportClass linreg
+#'
 
 linreg <-setRefClass( Class = "linreg",
                       fields= list(formula= "formula",
@@ -80,11 +83,16 @@ linreg <-setRefClass( Class = "linreg",
 
 
                         },
-                        print = function(){
-                          cat(paste("linreg(formula = ", format(frmla), ", data = ", dta , ")\n\n ", sep = ""))
-                          cat(paste("Coefficients:\n\n"))
-                          setNames(round(Regressions_coefficients[1:nrow(Regressions_coefficients)],3),rownames(Regressions_coefficients))
+                        print = function() {
+
+                          cat("\n","Call:","\n",
+                              paste("linreg(", "formula = ", frmla[2]," ", frmla[1], " ", frmla[3],", ", "data = ", dta, ")",sep = "", collapse = "\n" ),
+                              "\n","Coefficients:","\n",
+                              paste(row.names(Regressions_coefficients),
+                                    sep = "  ", collapse ="  " ),"\n",
+                              format(round(Regressions_coefficients,2), justify = "centre",width = 13))
                         },
+
 
                         resid = function(){
                           return(as.vector(The_residuals))
@@ -122,14 +130,29 @@ linreg <-setRefClass( Class = "linreg",
 
 
                           return(grid.arrange(p1, p2, ncol = 1))
+                        },
+
+                        summary = function () {
+                          cat("\nCall:\n")
+                          cat(paste("linreg(formula = ", (format(frmla)), ", data = ", dta, ")\n\n", sep = ""))
+                          cat("Coefficients:\n\n")
+
+                          table = data.frame(matrix(ncol = 5, nrow = 0))
+                          for (i in 1:length(Regressions_coefficients)){
+
+                            t = Regressions_coefficients[i]/sqrt(The_variance_of_the_regression_coefficients[i, i])
+
+                            p = 2 * pt(abs(t), The_degrees_of_freedom, lower.tail = FALSE)
+
+                            newdataframe = data.frame(round(Regressions_coefficients[i], 2), round(sqrt(The_variance_of_the_regression_coefficients[i, i]), 2), round(t, 2), formatC(p, format = "e", digits = 2),"***")
+                            rownames(newdataframe)[1] = rownames(The_variance_of_the_regression_coefficients)[i]
+                            table = rbind(table, newdataframe)
+                          }
+
+                          colnames(table) = c(" ", "Estimate", "Standard Error", "t-value", "P-Value")
+                          write.table(table, quote=FALSE)
+                          cat(paste("\nResidual standard error:", sqrt(The_residual_variance), "on", The_degrees_of_freedom, "degrees of freedom"))
+
                         }
-
-
                       )
-
 )
-
- # linreg_mod <- linreg$new(Petal.Length~Species, data = iris)
- # linreg_mod$print()
-# linreg_mod$ploting()
-
