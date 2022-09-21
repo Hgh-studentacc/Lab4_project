@@ -97,8 +97,8 @@ linreg <-setRefClass( Class = "linreg",
 
                           p2<<-ggplot()+
                             #geom_line(data=data,aes(x=,y=),color="red")+
-                            geom_point(data=data,aes(x=The_fitted_values,y=The_residual_variance),shape=1)+
-                            ylab("sqrt(|Standardized residual|)")+xlab("Fitted values")+
+                            geom_point(data=data,aes(x=The_fitted_values,y=sqrt(abs(scale(The_residuals)))),shape=1)+
+                            ylab(expression(sqrt(abs("Standardized residual"))))+xlab("Fitted values")+
                             labs(title = paste("Scale-Location"))+
                             theme(plot.title = element_text(hjust = 0.5))
 
