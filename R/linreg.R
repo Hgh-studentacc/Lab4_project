@@ -85,6 +85,8 @@ linreg <-setRefClass( Class = "linreg",
                           setNames(round(Regressions_coefficients[1:nrow(Regressions_coefficients)],3),rownames(Regressions_coefficients))
                         },
                         ploting=function(){
+                          library(ggplot2)
+                          library(gridExtra)
 
                           p1<<-ggplot()+
                             #geom_line(data=data,aes(x=all.vars(formula)[2],y=all.vars(formula)[1]),color="red")+
