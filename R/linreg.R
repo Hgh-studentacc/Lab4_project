@@ -91,12 +91,17 @@ linreg <-setRefClass( Class = "linreg",
                           p1<<-ggplot()+
                             #geom_line(data=data,aes(x=all.vars(formula)[2],y=all.vars(formula)[1]),color="red")+
                             geom_point(data=data,aes(x=The_fitted_values,y=The_residuals),shape=1)+
-                            ylab("Residuals")+xlab("Fitted values")
+                            ylab("Residuals")+xlab("Fitted values")+
+                            labs(title = paste("Residuals vs Fitted values"))+
+                            theme(plot.title = element_text(hjust = 0.5))
 
                           p2<<-ggplot()+
                             #geom_line(data=data,aes(x=,y=),color="red")+
                             geom_point(data=data,aes(x=The_fitted_values,y=The_residual_variance),shape=1)+
-                            ylab("sqrt(|Standardized residual|)")+xlab("Fitted values")
+                            ylab("sqrt(|Standardized residual|)")+xlab("Fitted values")+
+                            labs(title = paste("Scale-Location"))+
+                            theme(plot.title = element_text(hjust = 0.5))
+
 
 
                           return(grid.arrange(p1, p2, ncol = 1))
