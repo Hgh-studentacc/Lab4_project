@@ -15,6 +15,9 @@
 #' @export
 #'
 #' @examples
+
+library(ggplot2)
+library(gridExtra)
 linreg <-setRefClass( Class = "linreg",
                       fields= list(formula= "formula",
                                    data= "data.frame",
@@ -80,10 +83,28 @@ linreg <-setRefClass( Class = "linreg",
                         print = function(){
                           cat(paste("linreg(formula = ", format(frmla), ", data = ", dta , ")\n\n ", sep = ""))
                           setNames(round(Regressions_coefficients[1:nrow(Regressions_coefficients)],3),rownames(Regressions_coefficients))
+                        },
+                        ploting=function(){
+
+                          p1<<-ggplot()+
+                            #geom_line(data=data,aes(x=all.vars(formula)[2],y=all.vars(formula)[1]),color="red")+
+                            geom_point(data=data,aes(x=The_fitted_values,y=The_residuals),shape=1)+
+                            ylab("Residuals")+xlab("Fitted values")
+
+                          p2<<-ggplot()+
+                            #geom_line(data=data,aes(x=,y=),color="red")+
+                            geom_point(data=data,aes(x=The_fitted_values,y=The_residual_variance),shape=1)+
+                            ylab("sqrt(|Standardized residual|)")+xlab("Fitted values")
+
+
+                          return(grid.arrange(p1, p2, ncol = 1))
                         }
+
 
                       )
 
 )
+
 linreg_mod <- linreg$new(Petal.Length~Species, data = iris)
 linreg_mod$print()
+linreg_mod$ploting()
